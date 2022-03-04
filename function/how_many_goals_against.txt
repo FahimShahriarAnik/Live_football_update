@@ -1,0 +1,23 @@
+create function how_many_goals_against(t_name character varying) returns integer
+  language plpgsql
+as
+$$
+declare
+    total integer=0;
+    table_row public.matches%rowtype;
+    begin
+    for table_row in select * from public.matches loop
+      if(table_row.home_team=t_name and table_row.match_status=2)then
+        total := total + table_row.away_goal;
+        elseif (table_row.away_team=t_name and table_row.match_status=2)then
+        total := total+table_row.home_goal;
+      end if;
+
+    end loop;
+
+    return total;
+  end;
+$$;
+
+alter function how_many_goals_against(varchar) owner to postgres;
+

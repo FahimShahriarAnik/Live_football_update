@@ -1,0 +1,19 @@
+create function fav_team_details(input integer) 
+returns TABLE(id integer, name character varying, 
+homeland character varying, worth integer)
+  language plpgsql
+as $$
+declare
+  begin
+  return query
+    select team_id,team_name,country,net_worth
+    from public.team
+where team_id in
+      ( select team_id
+        from public.favourite
+        where user_id=input
+        );
+  end; $$;
+
+alter function fav_team_details(integer) owner to postgres;
+

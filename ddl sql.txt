@@ -1,0 +1,262 @@
+--------------user table------
+CREATE TABLE live."UserProfile"
+(
+    user_id serial NOT NULL,
+    name character varying(50) NOT NULL,
+    email character varying(50) NOT NULL,
+    password character varying(50) NOT NULL,
+    PRIMARY KEY (user_id)
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE live."UserProfile"
+    OWNER to postgres;
+
+--------load excel-------
+
+COPY live."UserProfile"(name,email,password)
+FROM 'C:\UserProfile.csv' DELIMITER ',' CSV HEADER;
+
+
+
+---------------favourite table----------
+CREATE TABLE live.favourite
+(
+    id serial NOT NULL,
+    user_id integer NOT NULL,
+    team_id integer NOT NULL,
+    PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE live.favourite
+    OWNER to postgres;
+
+
+--------------load excel-------------------------
+
+
+COPY live."favourite"(id,user_id,team_id)
+FROM 'C:\Favourite.csv' DELIMITER ',' CSV HEADER;
+
+
+----------------team table-------------
+
+
+CREATE TABLE live.team
+(
+    team_id integer NOT NULL,
+    team_name character varying(80) NOT NULL,
+    country character varying(80),
+    net_worth integer,
+    PRIMARY KEY (team_id)
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE live.team
+    OWNER to postgres;
+
+-----------------load-----------------
+
+COPY live.team(team_id,team_name,country,net_worth)
+FROM 'C:\Team.csv' DELIMITER ',' CSV HEADER;
+
+--------------team_staff------------------
+
+
+CREATE TABLE live.team_staff
+(
+    id serial NOT NULL,
+    team_id integer NOT NULL,
+    staff_id integer NOT NULL,
+    start_date date NOT NULL,
+    end_date date,
+    PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE live.team_staff
+    OWNER to postgres;
+
+----------------load---------------
+
+COPY live.team_staff(id,team_id,staff_id,start_date,end_date)
+FROM 'C:\Team_staff.csv' DELIMITER ',' CSV HEADER;
+
+
+--------------staff---------------------
+
+CREATE TABLE live.staff
+(
+    staff_id serial NOT NULL,
+    name character varying(90) NOT NULL,
+    age integer NOT NULL,
+    salary integer,
+    PRIMARY KEY (staff_id)
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE live.staff
+    OWNER to postgres;
+
+
+------------------load------------------
+
+COPY live.staff(staff_id,name,age,salary)
+FROM 'C:\Staff.csv' DELIMITER ',' CSV HEADER;
+
+
+
+-------player----------
+
+CREATE TABLE live.player
+(
+    player_id serial NOT NULL,
+    p_name character varying(80) NOT NULL,
+    "position" character varying(10),
+    country character varying(80),
+    age integer,
+    salary integer,
+    PRIMARY KEY (player_id)
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE live.player
+    OWNER to postgres;
+
+--------load-----------
+
+COPY live.player(player_id,p_name,position,country,age,salary)
+FROM 'C:\Player.csv' DELIMITER ',' CSV HEADER;
+
+
+-------team_player---------
+CREATE TABLE live.team_player
+(
+    id serial NOT NULL,
+    team_id integer NOT NULL,
+    player_id integer NOT NULL,
+    start_date date,
+    end_date date,
+    PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE live.team_player
+    OWNER to postgres;
+
+-------load--------------
+COPY live.team_player(team_id,player_id,start_date,end_date)
+FROM 'C:\Team_player.csv' DELIMITER ',' CSV HEADER;
+
+-----------team_match------------
+CREATE TABLE live.team_match
+(
+    id serial NOT NULL,
+    team_id integer NOT NULL,
+    match_id integer NOT NULL,
+    PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE live.team_match
+    OWNER to postgres;
+
+
+
+----------load----------
+
+COPY live.team_match(id,team_id,match_id)
+FROM 'C:\Team_match.csv' DELIMITER ',' CSV HEADER;
+
+
+---------cup-----------
+CREATE TABLE live.cup
+(
+    cup_id integer NOT NULL,
+    cup_name character varying(60) NOT NULL,
+    no_of_clubs integer,
+    host character varying(60),
+    PRIMARY KEY (cup_id)
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE live.cup
+    OWNER to postgres;
+
+----------load-------
+
+COPY live.team_match(id,team_id,match_id)
+FROM 'C:\Team_match.csv' DELIMITER ',' CSV HEADER;
+
+----------matches--------
+
+
+CREATE TABLE live.matches
+(
+    match_id serial NOT NULL,
+    date date,
+    gameweek integer,
+    home_team character varying(80) NOT NULL,
+    away_team character varying(80) NOT NULL,
+    home_goal integer,
+    away_goal integer,
+    match_status integer,
+    goal_min character varying(80),
+    goal_scorer character varying(200),
+    goal_assist character varying(200),
+    yellow_card character varying(200),
+    red_card character varying(200),
+    yellow_min character varying(80),
+    red_min character varying(80),
+    cup_id integer,
+    PRIMARY KEY (match_id)
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE live.matches
+    OWNER to postgres;
+
+
+-------------load--------------
+
+COPY live.matches
+FROM 'C:\Matches.csv' DELIMITER ',' CSV HEADER;
+
+
+
+
+-----------------------admin----------------
+CREATE TABLE public.admin
+(
+    id serial NOT NULL,
+    username character varying(80),
+    password character varying(80),
+    PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+);
+
+ALTER TABLE public.admin
+    OWNER to postgres;

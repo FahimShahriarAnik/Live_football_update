@@ -1,0 +1,61 @@
+----------------trigger function-----------------
+
+CREATE OR REPLACE FUNCTION log_insert_TeamMaches() RETURNS trigger AS
+$body$
+Declare
+h_id integer;
+a_id integer;
+BEGIN
+		select team_id
+		from public."team",public.matches
+		where team_name=NEW.home_team into h_id;
+		
+		select team_id
+		from public."team",public.matches
+		where team_name=NEW.away_team into a_id;
+		
+	 INSERT INTO public.team_matches(match_id, home_team_id, away_team_id)
+	 Values(NEW.match_id, h_id,a_id);
+	
+	return new;
+END;
+$body$
+language plpgsql;
+
+--------------trigger create-----------
+CREATE TRIGGER insert_teamMatches
+  AFTER INSERT
+  ON public.matches
+  FOR EACH ROW
+  EXECUTE PROCEDURE log_insert_TeamMaches();
+  
+  
+
+
+--------------insert----------------
+
+INSERT INTO public.matches(
+	match_id, date, gameweek, home_team, away_team,cup_id)
+	VALUES (250, '2019-04-03',15, 'Brazil', 'Argentina', 4);
+
+INSERT INTO public.matches(
+	match_id, date, gameweek, home_team, away_team,cup_id)
+	VALUES (251, '2019-04-03',15,'Argentina', 'Brazil', 4);
+
+
+---------anik inserted--------
+INSERT INTO public.matches(
+	match_id, date, gameweek, home_team, away_team,match_status,cup_id)
+	VALUES (250, '2019-02-11',26, 'Man City', 'Chelsea',0, 1);
+
+
+
+INSERT INTO public.matches(
+	match_id, date, gameweek, home_team, away_team,match_status,cup_id)
+	VALUES (251, '2019-02-11',26, 'Man United', 'Cardiff',0, 1);
+
+
+
+INSERT INTO public.matches(
+	match_id, date, gameweek, home_team, away_team,match_status,cup_id)
+	VALUES (252, '2019-02-11',26, 'Arsenal', 'Liverpool',0, 1);

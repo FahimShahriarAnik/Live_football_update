@@ -1,0 +1,26 @@
+CREATE OR REPLACE FUNCTION log_delete_TeamMaches() RETURNS trigger AS
+$body$
+Declare
+BEGIN
+		DELETE FROM public.team_matches
+		WHERE match_id=OLD.match_id;
+	
+	return new;
+END;
+$body$
+language plpgsql;
+
+
+CREATE TRIGGER delete_teamMatches
+  AFTER DELETE
+  ON public.matches
+  FOR EACH ROW
+  EXECUTE PROCEDURE log_delete_TeamMaches();
+  
+------------------------------------  
+  INSERT INTO public.matches(
+	match_id, date, gameweek, home_team, away_team,cup_id)
+	VALUES (250, '2019-04-03',15,'Argentina', 'Brazil', 4);
+----------------------------------------
+DELETE FROM public.matches
+WHERE match_id=250;

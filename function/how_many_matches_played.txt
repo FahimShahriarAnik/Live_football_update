@@ -1,0 +1,20 @@
+create function how_many_matches_played(t_name character varying) returns integer
+  language plpgsql
+as
+$$
+declare
+    total integer;
+    begin
+    select count(*) into total
+    from matches
+    where (home_team=t_name and match_status=2) or (away_team=t_name and match_status=2);
+    return total;
+  end;
+$$;
+
+alter function how_many_matches_played(varchar) owner to postgres;
+
+
+----------------call the function------------
+
+select how_many_matches_played('Man United');

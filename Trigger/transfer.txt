@@ -1,0 +1,43 @@
+------------------TRIGGER FUNCTION----------------------
+CREATE OR REPLACE FUNCTION log_transfer_history() RETURNS trigger AS
+$body$
+Declare
+	o_name varchar;
+	n_name character varying;
+	pl_name character varying;
+BEGIN
+		select team_name
+		from public."team" --,public.team_player
+		where team_id=OLD.team_id into o_name;
+		
+		select team_name
+		from public."team" --,public.team_player
+		where team_id=NEW.team_id into n_name;
+		
+		select p_name
+		from public."player"
+		where player_id=OLD.player_id into pl_name;
+
+	INSERT INTO public.transfer_history(player_name,old_team,new_team,start_date,end_date)
+	Values(pl_name,o_name,n_name,OLD.start_date,CURRENT_DATE);
+	
+	return new;
+END;
+$body$
+language plpgsql;
+
+-----------------------TRIGGER--------------------
+
+CREATE TRIGGER transfer_history
+  AFTER UPDATE
+  ON public.team_player
+  FOR EACH ROW
+  EXECUTE PROCEDURE log_transfer_history();
+ 
+ begin;
+rollback;
+
+--------------------------UPDATE--------------------
+UPDATE public.team_player
+SET team_id = 6,start_date=CURRENT_DATE
+WHERE player_id=147;

@@ -1,0 +1,22 @@
+create function is_admin(u_name character varying, p_word character varying) returns integer
+  language plpgsql
+as
+$$
+declare
+    ans integer=0;
+    table_row public.admin%rowtype;
+    begin
+
+    for table_row in select * from public.admin loop
+      if(table_row.username=u_name and table_row.password=p_word) then
+        ans := 1;
+      end if;
+
+    end loop;
+
+    return  ans;
+  end;
+$$;
+
+alter function is_admin(varchar, varchar) owner to postgres;
+

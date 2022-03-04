@@ -1,0 +1,14 @@
+create function count_points(win integer, draw integer) returns integer
+  language plpgsql
+as
+$$
+declare
+  total integer=0;
+  begin
+    total := win*3+draw*1;
+    return total;
+  end;
+$$;
+
+alter function count_points(integer, integer) owner to postgres;
+

@@ -1,0 +1,25 @@
+create function generate_league_standings(cupid integer) returns TABLE(team character varying, matches integer, won integer, drawn integer, lost integer, goals_for integer, goals_against integer, points integer)
+  language plpgsql
+as
+$$
+declare
+  begin
+  return query
+
+    select
+       team_name,
+       how_many_matches_played(team_name),
+       how_many_matches_won(team_name),
+       how_many_matches_drawn(team_name),
+       how_many_matches_lost(team_name),
+       how_many_goals_for(team_name),
+       how_many_goals_against(team_name),
+       count_points(how_many_matches_won(team_name),how_many_matches_drawn(team_name)) as points
+    from public.team
+    where cup_id=cupid
+    order by points desc;
+  end;
+$$;
+
+alter function generate_league_standings(integer) owner to postgres;
+

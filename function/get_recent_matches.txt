@@ -1,0 +1,15 @@
+create function get_recent_matches(days integer) returns TABLE(match_id integer, home_team character varying, away_team character varying, home_goal integer, away_goal integer, match_status integer, cup_id integer)
+  language plpgsql
+as
+$$
+declare
+  begin
+  return query
+    select  a.match_id ,a.home_team ,a.away_team ,a.home_goal ,a.away_goal ,a.match_status ,a.cup_id
+    from matches as a
+    where date> (current_date-days);
+  end;
+$$;
+
+alter function get_recent_matches(integer) owner to postgres;
+

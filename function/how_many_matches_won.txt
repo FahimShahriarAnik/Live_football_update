@@ -1,0 +1,16 @@
+create function how_many_matches_won(t_name character varying) returns integer
+  language plpgsql
+as
+$$
+declare
+    total integer;
+    begin
+    select count(*) into total
+    from matches
+    where (home_team=t_name and match_status=2 and home_goal>away_goal) or (away_team=t_name and match_status=2 and away_goal>home_goal);
+    return total;
+  end;
+$$;
+
+alter function how_many_matches_won(varchar) owner to postgres;
+
